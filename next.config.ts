@@ -1,7 +1,25 @@
-import type { NextConfig } from "next";
+import type {NextConfig} from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+    // reactStrictMode: true,
+    /* config options here
+      async rewrites() {
+          return [
+              {
+                  source: '/:path*',
+                  destination: '/:path*'
+              },
+              {
+                  source: '/blog',
+                  destination: 'http://localhost:4000/blog'
+              },
+              {
+                  source: '/blog/:path*',
+                  destination: 'http://localhost:4000/blog/:path*'
+              }
+          ]
+      },
+      */
 };
 
 export default nextConfig;
