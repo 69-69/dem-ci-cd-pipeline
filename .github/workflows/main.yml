@@ -57,23 +57,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository code
       - name: Checkout code 🛎️
         uses: actions/checkout@v4
 
-      # Set up Node.js
       - name: Set up Node.js 🚀
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # Install dependencies and Playwright
       - name: Install dependencies and Playwright browsers 🧪
         run: |
           npm install
           npx playwright install --with-deps
 
-      # Run Playwright tests
       - name: Run Playwright tests 🧪
         run: npx playwright test
 
@@ -83,6 +79,7 @@ jobs:
   push_to_registries:
     name: Push Docker image to multiple registries
     runs-on: ubuntu-latest
+    needs: test  # This job will only run after the tests have passed
     permissions:
       packages: write
       contents: read
@@ -121,21 +118,19 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/docker_repository:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
             ghcr.io/${{ github.repository }}:latest
-
-  # ------------------------------------------------------------
-  # Job 3: Deploy Docker Image to Kubernetes on AWS EKS
-  # ------------------------------------------------------------
+#
+#  # ------------------------------------------------------------
+#  # Job 3: Deploy Docker Image to Kubernetes on AWS EKS
+#  # ------------------------------------------------------------
 #  deploy_to_eks:
 #    name: Deploy Docker Image to Kubernetes (AWS EKS)
 #    runs-on: ubuntu-latest
 #    needs: push_to_registries  # Only runs if the image is pushed successfully
 #
 #    steps:
-#      # Checkout the repository code
 #      - name: Checkout code 🛎️
 #        uses: actions/checkout@v4
 #
-#      # Configure AWS credentials
 #      - name: Configure AWS credentials 🔑
 #        uses: aws-actions/configure-aws-credentials@v2
 #        with:
@@ -143,11 +138,9 @@ jobs:
 #          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 #          aws-region: us-east-1
 #
-#      # Update kubeconfig for EKS
 #      - name: Update kubeconfig for EKS
 #        run: aws eks update-kubeconfig --name my-cluster
 #
-#      # Install kubectl and eksctl
 #      - name: Install kubectl and eksctl
 #        run: |
 #          curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.4/2021-08-10/bin/linux/amd64/kubectl
@@ -157,17 +150,16 @@ jobs:
 #          curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.62.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
 #          sudo mv /tmp/eksctl /usr/local/bin
 #
-#      # Deploy to Kubernetes (EKS)
 #      - name: Deploy to Kubernetes
 #        run: |
 #          kubectl apply -f k8s/deployment.yaml
 #          kubectl apply -f k8s/service.yaml
 #          kubectl set image deployment/$APP_NAME $APP_NAME=${{ secrets.DOCKER_HUB_USERNAME }}/$APP_NAME:${{ github.sha }}
 #
-#      # Wait for the application to be fully deployed
 #      - name: Wait for deployment
 #        run: |
 #          kubectl rollout status deployment/$APP_NAME
+
 
 
 # ---------------------------------------------------------

@@ -5,6 +5,7 @@ test('Home page: Automated Regression Testing', async ({page}) => {
     await page.goto(process.env.BASE_URL || 'http://localhost:3000');
 
     // Expect a title "to contain" a substring
+    await page.waitForSelector('h1:has-text("Steve Home")', { timeout: 10000 });
     await expect(page).toHaveTitle(/Steve Home/);
 
     // Create a locator
