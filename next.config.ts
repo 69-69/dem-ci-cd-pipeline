@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
           ]
       },
       */
-    standalone: true,
+    output: "standalone",
 };
 
 export default nextConfig;
