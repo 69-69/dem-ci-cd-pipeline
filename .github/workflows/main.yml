@@ -1,6 +1,44 @@
 # ------------------------------------------------------------
 # GitHub Actions Workflow for Docker Image Testing, Building, and Deployment
-# This workflow automates the process of testing, building, and deploying a Docker image.
+# Workflow Breakdown:
+#Job 1: Run Playwright E2E Tests
+#
+#Checks out your code.
+#
+#Installs Node.js and project dependencies.
+#
+#Installs Playwright and required browsers.
+#
+#Runs the Playwright automated regression tests.
+#
+#Fails the workflow if the tests fail, preventing further steps.
+#
+#Job 2: Build Docker Image and Push to Docker Hub & GitHub Container Registry
+#
+#Checks out your code again.
+#
+#Sets up Docker Buildx for building multi-platform images.
+#
+#Logs into Docker Hub and GitHub Container Registry using your secrets.
+#
+#Builds the Docker image from the repository’s Dockerfile.
+#
+#Tags the Docker image with both the Git commit SHA and latest tag.
+#
+#Pushes the image to both Docker Hub and GitHub Container Registry.
+#
+#Job 3: Deploy Docker Image to Kubernetes on AWS EKS
+#
+#Configures AWS credentials using secrets.
+#
+#Updates the kubeconfig for connecting to your AWS EKS cluster.
+#
+#Installs kubectl and eksctl to manage the Kubernetes cluster.
+#
+#Deploys the Docker image to your Kubernetes cluster, updating the deployment to use the newly built image with the commit SHA tag.
+#
+#Waits for the deployment to be fully rolled out.
+# --------------------------------------------------------------------------
 
 name: Docker Test, Build, Deploy & Publish
 
